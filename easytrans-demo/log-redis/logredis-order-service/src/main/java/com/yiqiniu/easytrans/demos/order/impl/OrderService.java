@@ -24,9 +24,9 @@ public class OrderService {
 	
 	public static final String BUSINESS_CODE = "buySth";
 
-
 	@Resource
 	private EasyTransFacade transaction;
+	
 	@Resource
 	private JdbcTemplate jdbcTemplate;
 	
@@ -39,7 +39,7 @@ public class OrderService {
 		 * 
 		 * 优先完成本地事务以 1. 提高性能（减少异常时回滚消耗）2. 生成事务内交易ID 
 		 */
-		Integer id = saveOrderRecord(jdbcTemplate,userId,money);
+		Integer id = saveOrderRecord(jdbcTemplate, userId, money);
 		
 		/**
 		 * annotation the global transactionId, it is combined of appId + bussiness_code + id
@@ -56,16 +56,17 @@ public class OrderService {
 		 * call remote service to deduct money, it's a TCC service,
 		 * framework will maintains the eventually constancy based on the final transaction status of method buySomething 
 		 * if you think introducing object transaction(EasyTransFacade) is an unacceptable coupling
-		 * then you can refer to another demo(interfacecall) in the demos directory, it will show you how to execute transaction by user defined interface
+		 * then you can refer to another demo(interfaceCall) in the demos directory, it will show you how to execute transaction by user defined interface
 		 * 
 		 * 调用远程服务扣除所需的钱,这个远程服务实现了TCC接口,
 		 * 框架会根据buySomething方法的事务结果来维护远程服务的最终一致性
 		 * 如果你认为引入transaction（EasyTransFacde）是一个无法接受的耦合
-		 * 那么你可以参考在demos目录下另外一个样例(interfacecall)，它会告诉你如何用用户自定义的接口来执行远程事务
+		 * 那么你可以参考在demos目录下另外一个样例(interfaceCall)，它会告诉你如何用用户自定义的接口来执行远程事务
 		 */
 		WalletPayRequestVO deductRequest = new WalletPayRequestVO();
 		deductRequest.setUserId(userId);
 		deductRequest.setPayAmount(money);
+		
 		/**
 		 * return future for the benefits of performance enhance(batch write execute log and batch execute RPC)
 		 * 返回future是为了能方便的优化性能(批量写日志及批量调用RPC)
@@ -80,7 +81,6 @@ public class OrderService {
 		 * 你可以额外加入其它类型的事务，如TCC,可靠消息，SAGA-TCC等等
 		 * 框架会维护全局事务的最终一致性
 		 */
-		
 		
 		/**
 		 * we can get remote service result to determine whether to commit this transaction

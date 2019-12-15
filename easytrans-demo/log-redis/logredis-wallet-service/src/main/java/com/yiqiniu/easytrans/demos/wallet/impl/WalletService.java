@@ -15,6 +15,7 @@ public class WalletService {
 	
 	@Resource
 	private EasyTransFacade transaction;
+
 	@Resource
 	private JdbcTemplate jdbcTemplate;
 	
