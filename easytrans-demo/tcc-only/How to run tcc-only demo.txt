@@ -1,0 +1,25 @@
+How to run the Easytransaction tcc-only demo.
+
+1. create mysql DB
+
+execute the scripts in 
+	tcc-only\tcconly-order-service\src\main\resources\createDatabase.sql
+	tcc-only\tcconly-wallet-service\src\main\resources\createDatabase.sql
+
+note: if there is error message when run the tcc-only demo like:Data source rejected establishment of connection, message from server: "Too many connections"
+please modify the max_connections value in my.ini of mysql file.
+
+2. start zookeeper
+
+download zookeeper: https://mirrors.tuna.tsinghua.edu.cn/apache/zookeeper/zookeeper-3.5.6/
+unzip
+modify dataDir dataLogDir clientPort in apache-zookeeper-3.5.6\conf\zoo_sample.cfg
+rename zoo_sample.cfg to zoo.cfg
+run \apache-zookeeper-3.5.6\bin\zkServer.cmd
+run zkCli.cmd -server 127.0.0.1:2281
+
+3. modify application.yml set the database and port related information.
+
+4. run the order and wallet service.
+
+5. http://localhost:18080/buySth?userId=1&money=100
