@@ -18,14 +18,6 @@ public class WalletPayVO {
 		
 		private Long payAmount;
 
-		public Long getPayAmount() {
-			return payAmount;
-		}
-
-		public void setPayAmount(Long payAmount) {
-			this.payAmount = payAmount;
-		}
-
 		public Integer getUserId() {
 			return userId;
 		}
@@ -33,11 +25,22 @@ public class WalletPayVO {
 		public void setUserId(Integer userId) {
 			this.userId = userId;
 		}
+
+		public Long getPayAmount() {
+			return payAmount;
+		}
+
+		public void setPayAmount(Long payAmount) {
+			this.payAmount = payAmount;
+		}
 	}
 	
 	public static class WalletPayResponseVO implements Serializable{
+		
 		private static final long serialVersionUID = 1L;
+		
 		private Long freezeAmount;
+		
 		public Long getFreezeAmount() {
 			return freezeAmount;
 		}
@@ -47,8 +50,7 @@ public class WalletPayVO {
 		
 		@Override
 		public String toString() {
-			return "WalletPayTccMethodResult [freezeAmount=" + freezeAmount
-					+ "]";
+			return "WalletPayTccMethodResult [freezeAmount=" + freezeAmount + "]";
 		}
 	}
 
