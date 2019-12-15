@@ -56,3 +56,5 @@ CREATE TABLE "order" (
     "create_time" date              NOT NULL,
     constraint pk_order primary key ("order_id")
 );
+
+INSERT INTO wallet (user_id, total_amount, freeze_amount) VALUES ('1', '10000000', '0');
