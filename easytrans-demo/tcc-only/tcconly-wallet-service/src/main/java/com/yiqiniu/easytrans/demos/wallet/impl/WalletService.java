@@ -23,7 +23,7 @@ public class WalletService {
 	public WalletPayResponseVO doTryPay(WalletPayRequestVO param) {
 		System.out.println("exec doTryPay start...");
 		int update = jdbcTemplate.update(
-				"update `wallet` set freeze_amount = freeze_amount + ? where user_id = ? and (total_amount - freeze_amount) >= ?;", 
+				"update wallet set freeze_amount = freeze_amount + ? where user_id = ? and (total_amount - freeze_amount) >= ?;", 
 				param.getPayAmount(), param.getUserId(), param.getPayAmount());
 		
 		if(update != 1){
@@ -40,12 +40,17 @@ public class WalletService {
 	public void doConfirmPay(WalletPayRequestVO param) {
 		System.out.println("exec doConfirmPay start...");
 		int update = jdbcTemplate.update(
-				"update `wallet` set freeze_amount = freeze_amount - ?, total_amount = total_amount - ? where user_id = ?;", 
+				"update wallet set freeze_amount = freeze_amount - ?, total_amount = total_amount - ? where user_id = ?;", 
 				param.getPayAmount(), param.getPayAmount(), param.getUserId());
 		
 		if(update != 1){
-			throw new RuntimeException("thrown exception with the failed confirmPay!");
+			throw new RuntimeException("thrown exception with the failed confirmPay, not match!");
 		}
+		
+		if(param.getPayAmount()==200 && (new java.util.Random().nextBoolean())) {
+			throw new RuntimeException("thrown exception with the failed confirmPay, over 200!");
+		}
+		
 		System.out.println("exec doConfirmPay end...");
 	}
 	
@@ -53,7 +58,7 @@ public class WalletService {
 	public void doCancelPay(WalletPayRequestVO param) {
 		System.out.println("exec doCancelPay start...");
 		int update = jdbcTemplate.update(
-				"update `wallet` set freeze_amount = freeze_amount - ? where user_id = ?;", 
+				"update wallet set freeze_amount = freeze_amount - ? where user_id = ?;", 
 				param.getPayAmount(),param.getUserId());
 		
 		if(update != 1){
