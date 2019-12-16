@@ -108,14 +108,14 @@ public class OrderService {
 	
 	private Integer saveOrderRecord(JdbcTemplate jdbcTemplate, final int userId, final long money) {
 		
-		final String INSERT_SQL = "INSERT INTO `order` (`order_id`, `user_id`, `money`, `create_time`) VALUES (NULL, ?, ?, ?);";
+		final String INSERT_SQL = "INSERT INTO public.order (order_id, user_id, money, create_time) VALUES ( nextval('order_seq'), ?, ?, ?);";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(
 		    new PreparedStatementCreator() {
 		    	@Override
 		        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 		            PreparedStatement ps =
-		                connection.prepareStatement(INSERT_SQL, new String[] {"id"});
+		                connection.prepareStatement(INSERT_SQL, new String[] {"order_id"});
 		            ps.setInt(1, userId);
 		            ps.setLong(2, money);
 		            ps.setDate(3, new Date(System.currentTimeMillis()));

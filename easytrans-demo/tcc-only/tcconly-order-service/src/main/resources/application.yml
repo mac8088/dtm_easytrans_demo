@@ -2,12 +2,12 @@ spring:
   application:
     name: order-service  # the same with com.yiqiniu.easytrans.demos.order.Constant.APPID
   datasource: # order service datasource config
-    url: jdbc:mysql://localhost:3306/easytx_order?characterEncoding=UTF-8&useSSL=false
-    username: root
-    password: root
-    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:postgresql://localhost:5432/easytx_order
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
 
-server: 
+server:
   port: 18080
 
 # RIBBON用，也可以直接开启Eureka
@@ -42,6 +42,7 @@ easytrans:
         password: root
 
 
+debug: true
 
     
       

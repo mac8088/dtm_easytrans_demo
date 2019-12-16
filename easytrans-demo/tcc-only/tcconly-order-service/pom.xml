@@ -28,13 +28,6 @@
 					<groupId>com.yiqiniu.easytrans</groupId>
 					<artifactId>easytrans-queue-kafka-starter</artifactId>
 				</exclusion>
-				<!-- In order to support postgresql, all of code moved into tcconly-wallet-api -->
-				<!--
-				<exclusion>
-					<groupId>com.yiqiniu.easytrans</groupId>
-					<artifactId>easytrans-log-database-starter</artifactId>
-				</exclusion>
-				-->
 			</exclusions>
 		</dependency>
 
@@ -42,7 +35,6 @@
 			<groupId>com.yiqiniu.easytrans.demos</groupId>
 			<artifactId>tcconly-wallet-api</artifactId>
 		</dependency>
-
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
