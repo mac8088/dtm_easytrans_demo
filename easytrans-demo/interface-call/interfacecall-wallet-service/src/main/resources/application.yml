@@ -9,7 +9,7 @@ spring:
 
 server:
   port: 8081
- 
+
 # RIBBON用，也可以直接开启Eureka
 order-service:
   ribbon:
@@ -40,7 +40,6 @@ easytrans:
         url: jdbc:mysql://localhost:3306/wallet_translog?characterEncoding=UTF-8&useSSL=false
         username: root
         password: 123456
-
 
 
 
