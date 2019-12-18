@@ -46,9 +46,6 @@ CREATE TABLE `idempotent` (
 
 
 
-
-
-
 CREATE DATABASE `order_translog` ;
 USE `order_translog`;
 

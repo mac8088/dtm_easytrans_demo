@@ -18,6 +18,7 @@ public class WalletService {
 	
 	@Resource
 	private EasyTransFacade transaction;
+
 	@Resource
 	private JdbcTemplate jdbcTemplate;
 	
@@ -38,7 +39,6 @@ public class WalletService {
 		return walletPayTccMethodResult;
 	}
 	
-
 	@Transactional
 	public void doConfirmPay(WalletPayRequestVO param) {
 		int update = jdbcTemplate.update("update `wallet` set freeze_amount = freeze_amount - ?, total_amount = total_amount - ? where user_id = ?;", 
