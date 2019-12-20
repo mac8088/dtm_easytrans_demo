@@ -20,47 +20,47 @@ import com.yiqiniu.easytrans.demos.wallet.api.WalletPayMoneyService.WalletPayRes
 
 @Component
 public class OrderService {
-	
 
 	@Resource
 	private WalletPayMoneyService payService;
+
 	@Resource
 	private JdbcTemplate jdbcTemplate;
-	
-	
+
 	@Transactional
-	public String buySomething(int userId,long money){
-		
+	public String buySomething(int userId, long money) {
+
 		int id = saveOrderRecord(userId, money);
 		WalletPayRequestVO request = new WalletPayRequestVO();
 		request.setUserId(userId);
 		request.setPayAmount(money);
-		
+
 		WalletPayResponseVO pay = payService.pay(request);
+
+		// hard coding with: if order Id MOD 3 == 0
+		if (id % 3 == 0) {
+			throw new RuntimeException("wrong order (MOD 3) and unknown Exception!");
+		}
+
 		return "id:" + id + " freeze:" + pay.getFreezeAmount();
 	}
-	
-	
+
 	private Integer saveOrderRecord(final int userId, final long money) {
-		
+
 		final String INSERT_SQL = "INSERT INTO `order` (`order_id`, `user_id`, `money`, `create_time`) VALUES (NULL, ?, ?, ?);";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		jdbcTemplate.update(
-		    new PreparedStatementCreator() {
-		    	@Override
-		        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-		            PreparedStatement ps =
-		                connection.prepareStatement(INSERT_SQL, new String[] {"id"});
-		            ps.setInt(1, userId);
-		            ps.setLong(2, money);
-		            ps.setDate(3, new Date(System.currentTimeMillis()));
-		            return ps;
-		        }
-		    },
-		    keyHolder);
-		
+		jdbcTemplate.update(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+				PreparedStatement ps = connection.prepareStatement(INSERT_SQL, new String[] { "id" });
+				ps.setInt(1, userId);
+				ps.setLong(2, money);
+				ps.setDate(3, new Date(System.currentTimeMillis()));
+				return ps;
+			}
+		}, keyHolder);
+
 		return keyHolder.getKey().intValue();
 	}
-	
-	
+
 }
