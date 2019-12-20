@@ -16,16 +16,17 @@ import com.yiqiniu.easytrans.util.CallWrapUtil;
 @EnableEasyTransaction
 @EnableTransactionManagement
 public class OrderApplication {
+
 	public static void main(String[] args) {
 		SpringApplication.run(OrderApplication.class, args);
 	}
-	
+
 	/**
-	 * create WalletPayMoneyService instance, you can inject the instance to call wallet tcc service
+	 * create WalletPayMoneyService instance, you can inject the instance to call wallet TCC service
 	 */
 	@Bean
 	public WalletPayMoneyService payService(CallWrapUtil util) {
 		return util.createTransactionCallInstance(WalletPayMoneyService.class, WalletPayRequestCfg.class);
 	}
-	
+
 }

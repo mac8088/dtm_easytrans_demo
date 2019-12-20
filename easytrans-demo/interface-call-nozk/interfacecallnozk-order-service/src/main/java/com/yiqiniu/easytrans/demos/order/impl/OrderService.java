@@ -20,27 +20,25 @@ import com.yiqiniu.easytrans.demos.wallet.api.WalletPayMoneyService.WalletPayRes
 
 @Component
 public class OrderService {
-	
 
 	@Resource
 	private WalletPayMoneyService payService;
+
 	@Resource
 	private JdbcTemplate jdbcTemplate;
-	
-	
+
 	@Transactional
-	public String buySomething(int userId,long money){
-		
+	public String buySomething(int userId, long money) {
+
 		int id = saveOrderRecord(userId, money);
 		WalletPayRequestVO request = new WalletPayRequestVO();
 		request.setUserId(userId);
 		request.setPayAmount(money);
-		
+
 		WalletPayResponseVO pay = payService.pay(request);
 		return "id:" + id + " freeze:" + pay.getFreezeAmount();
 	}
-	
-	
+
 	private Integer saveOrderRecord(final int userId, final long money) {
 		
 		final String INSERT_SQL = "INSERT INTO `order` (`order_id`, `user_id`, `money`, `create_time`) VALUES (NULL, ?, ?, ?);";
@@ -61,6 +59,5 @@ public class OrderService {
 		
 		return keyHolder.getKey().intValue();
 	}
-	
-	
+
 }
