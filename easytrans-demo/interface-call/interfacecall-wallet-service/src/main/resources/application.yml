@@ -2,22 +2,22 @@ spring:
   application:
     name: wallet-service  # the same with com.yiqiniu.easytrans.demos.order.Constant.APPID
   datasource: # order service datasource config
-    url: jdbc:mysql://localhost:3306/wallet?characterEncoding=UTF-8&useSSL=false
+    url: jdbc:mysql://localhost:3306/easytx_wallet?characterEncoding=UTF-8&useSSL=false
     username: root
-    password: 123456
+    password: root
     driver-class-name: com.mysql.jdbc.Driver
 
 server:
-  port: 8081
+  port: 18081
 
 # RIBBON用，也可以直接开启Eureka
 order-service:
   ribbon:
-    listOfServers: localhost:8080
+    listOfServers: localhost:18080
 
 wallet-service:
   ribbon:
-    listOfServers: localhost:8081
+    listOfServers: localhost:18081
 
 easytrans:
   master:
@@ -37,11 +37,12 @@ easytrans:
       logCleanTime: 01:22:00
       druid:
         driverClassName: com.mysql.jdbc.Driver
-        url: jdbc:mysql://localhost:3306/wallet_translog?characterEncoding=UTF-8&useSSL=false
+        url: jdbc:mysql://localhost:3306/easytx_wallet_translog?characterEncoding=UTF-8&useSSL=false
         username: root
-        password: 123456
+        password: root
 
 
+debug: true
 
     
       
