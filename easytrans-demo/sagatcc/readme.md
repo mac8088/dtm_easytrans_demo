@@ -1,7 +1,8 @@
 # ENGLISH
+
 ## SAGA-TCC
 This demo shows how to use SAGA-TCC,the SAGA implement of this framework is not a typical one, the main difference is:
-* instead of using compensation model, the framework introduce TCC, and make TCC execute  asynchronous
+* instead of using compensation model, the framework introduce TCC, and make TCC execute asynchronous
 * instead of using queue to invoke next business, the framework use RPC
 	* Mainly for the sake of mix SAGA with other transaction types, e.g. TCC、Compensation transaction、reliable message.
 	* Another reason is that，if we use queue to invoke the services,it will add a lot of IOs in both queue and the transaction coordinator storage.but with RPC,we can avoid those IO
@@ -9,7 +10,7 @@ This demo shows how to use SAGA-TCC,the SAGA implement of this framework is not 
 	
 more usage you can refer to other demos or the UT case in easytrans-starter
 
-to run this demo, you will need zookeeper and mysql,change the configuration in applicaiton.yml,you can start the services
+to run this demo, you will need zookeeper and mysql, change the configuration in applicaiton.yml, you can start the services
 
 ## Attention
 * SAGA-TCC transaction can only use in the master transaction

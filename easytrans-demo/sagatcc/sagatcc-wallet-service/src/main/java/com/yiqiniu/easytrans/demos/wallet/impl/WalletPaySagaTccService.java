@@ -20,16 +20,19 @@ public class WalletPaySagaTccService implements SagaTccMethod<WalletPayRequestVO
 
 	@Override
 	public void sagaTry(WalletPayRequestVO param) {
+		System.out.println("exec WalletPaySagaTccService.sagaTry with: " + param);
 		wlletService.doTryPay(param);		
 	}
 
 	@Override
 	public void sagaConfirm(WalletPayRequestVO param) {
+		System.out.println("exec WalletPaySagaTccService.sagaConfirm with: " + param);
 		wlletService.doConfirmPay(param);		
 	}
 
 	@Override
 	public void sagaCancel(WalletPayRequestVO param) {
+		System.out.println("exec WalletPaySagaTccService.sagaCancel with: " + param);
 		wlletService.doCancelPay(param);		
 	}
 }

@@ -8,14 +8,13 @@ import com.yiqiniu.easytrans.protocol.saga.SagaTccMethodRequest;
 
 public class WalletPayVO {
 
-	@BusinessIdentifer(appId=WalletServiceApiConstant.APPID,busCode="sagaPay")
-	public static class WalletPayRequestVO implements Serializable,SagaTccMethodRequest {
+	@BusinessIdentifer(appId = WalletServiceApiConstant.APPID, busCode = "sagaPay")
+	public static class WalletPayRequestVO implements Serializable, SagaTccMethodRequest {
 
 		private static final long serialVersionUID = 1L;
 
-
 		private Integer userId;
-		
+
 		private Long payAmount;
 
 		public Long getPayAmount() {
@@ -32,6 +31,11 @@ public class WalletPayVO {
 
 		public void setUserId(Integer userId) {
 			this.userId = userId;
+		}
+		
+		@Override
+		public String toString() {
+			return "WalletPayRequestVO [userId=" + userId + "] payAmount=[" + payAmount + "]";
 		}
 	}
 
