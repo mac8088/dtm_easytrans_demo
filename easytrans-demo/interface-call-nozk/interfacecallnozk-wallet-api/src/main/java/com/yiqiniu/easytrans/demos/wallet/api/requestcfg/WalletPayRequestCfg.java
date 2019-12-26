@@ -9,7 +9,7 @@ import com.yiqiniu.easytrans.protocol.tcc.TccMethodRequest;
 /**
  * define the calling configuration for WalletPayMoneyService
  */
-@BusinessIdentifer(appId=WalletServiceApiConstant.APPID,busCode="pay",rpcTimeOut=2000)
-public class WalletPayRequestCfg extends WalletPayRequestVO implements TccMethodRequest<WalletPayResponseVO>{
+@BusinessIdentifer(appId = WalletServiceApiConstant.APPID, busCode = "pay", rpcTimeOut = 2000)
+public class WalletPayRequestCfg extends WalletPayRequestVO implements TccMethodRequest<WalletPayResponseVO> {
 	private static final long serialVersionUID = 1L;
 }
