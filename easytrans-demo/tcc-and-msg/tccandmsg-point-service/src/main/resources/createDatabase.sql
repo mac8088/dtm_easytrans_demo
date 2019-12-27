@@ -1,5 +1,4 @@
 CREATE DATABASE `point` ;
-
 USE `point`;
 
 Create Table `point` (  
@@ -7,7 +6,6 @@ Create Table `point` (
 	`point` bigint(20) NOT NULL,  
 	PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 INSERT INTO `point` (`user_id`, `point`) VALUES ('1', '0');
 
@@ -66,4 +64,5 @@ CREATE TABLE `trans_log_unfinished` (
   `create_time` datetime NOT NULL,
   PRIMARY KEY (`trans_log_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 SELECT * FROM translog.trans_log_detail;

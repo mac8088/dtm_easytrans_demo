@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import javax.annotation.Resource;
@@ -34,13 +35,16 @@ public class OrderService {
 	
 	@Transactional
 	public int buySomething(int userId,long money){
+		System.out.println("exec buySomething start...");
 		
 		/**
 		 * finish the local transaction first, in order for performance and generated of business id
 		 * 
 		 * 优先完成本地事务以 1. 提高性能（减少异常时回滚消耗）2. 生成事务内交易ID 
 		 */
+		System.out.println("exec saveOrderRecord start...");
 		Integer id = saveOrderRecord(jdbcTemplate, userId, money);
+		System.out.println("exec saveOrderRecord end, id: " + id);
 		
 		/**
 		 * annotation the global transactionId, it is combined of appId + bussiness_code + id
@@ -51,7 +55,9 @@ public class OrderService {
 		 * 本代码可以省略，框架会自动生成ID及使用一个默认的业务代码
 		 * 但这样的话，会使得我们难以把全局事务ID与一个具体的事务关联起来
 		 */
+		System.out.println("exec startEasyTrans start...");
 		transaction.startEasyTrans(BUSINESS_CODE, id);
+		System.out.println("exec startEasyTrans end  ...");
 		
 		/**
 		 * call remote service to deduct money, it's a TCC service,
@@ -72,8 +78,14 @@ public class OrderService {
 		 * return future for the benefits of performance enhance(batch write execute log and batch execute RPC)
 		 * 返回future是为了能方便的优化性能(批量写日志及批量调用RPC)
 		 */
-		@SuppressWarnings("unused")
+		System.out.println("exec deductFutureRPC start...");
 		Future<WalletPayResponseVO> deductFuture = transaction.execute(deductRequest);
+		System.out.println("exec deductFutureRPC end  ...");
+		
+		//TODO hard coding verify GT1, i.e.: 27 was blocked here, but 30 is OK
+		if(id % 3 == 0 && id % 5 != 0){
+			throw new RuntimeException("unknown exception with wrong order (Mod3 and !Mod5)!");
+		}
 		
 		/**
 		 * publish a message when this global-transaction is confirm
@@ -85,7 +97,10 @@ public class OrderService {
 		OrderFinishedMessage orderFinishedMsg = new OrderFinishedMessage();
 		orderFinishedMsg.setUserId(userId);
 		orderFinishedMsg.setOrderAmt(money);
+		
+		System.out.println("exec pubishOrderFinishedMsg start...");
 		transaction.execute(orderFinishedMsg);
+		System.out.println("exec pubishOrderFinishedMsg end  ...");
 		
 		/**
 		 * you can add more types of transaction calls here, e.g. TCC,reliable message, SAGA-TCC and so on
@@ -95,29 +110,42 @@ public class OrderService {
 		 * 框架会维护全局事务的最终一致性
 		 */
 		
+		//TODO hard coding verify GT2, i.e.: 25 was blocked, but 30 is OK
+		if(id % 3 != 0 && id % 5 == 0){
+			throw new RuntimeException("unknown exception with wrong order (!Mod3 and Mod5)!");
+		}
 		
 		/**
 		 * we can get remote service result to determine whether to commit this transaction
 		 * 
 		 * 可以获取远程返回的结果用以判断是继续往下走 还是 抛异常结束
-		 * 
-		 * deductFuture.get(); 
+		 *  
 		 */
-
+		System.out.println("exec checkDeductFuture start...");
+		try {
+			System.out.println("the RPC return result: " + deductFuture.get());
+		} catch (InterruptedException e) {
+			System.err.println("get InterruptedException when get RPC reuslt!");
+		} catch (ExecutionException e) {
+			System.err.println("get ExecutionException when get RPC reuslt!");
+		}
+		System.out.println("exec checkDeductFuture end  ...");
+		
+		System.out.println("exec buySomething end...");
 		return id;
 	}
 	
 	
 	private Integer saveOrderRecord(JdbcTemplate jdbcTemplate, final int userId, final long money) {
 		
-		final String INSERT_SQL = "INSERT INTO `order` (`order_id`, `user_id`, `money`, `create_time`) VALUES (NULL, ?, ?, ?);";
+		final String INSERT_SQL = "INSERT INTO public.order (order_id, user_id, money, create_time) VALUES ( nextval('order_seq'), ?, ?, ?);";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(
 		    new PreparedStatementCreator() {
 		    	@Override
 		        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 		            PreparedStatement ps =
-		                connection.prepareStatement(INSERT_SQL, new String[] {"id"});
+		                connection.prepareStatement(INSERT_SQL, new String[] {"order_id"});
 		            ps.setInt(1, userId);
 		            ps.setLong(2, money);
 		            ps.setDate(3, new Date(System.currentTimeMillis()));

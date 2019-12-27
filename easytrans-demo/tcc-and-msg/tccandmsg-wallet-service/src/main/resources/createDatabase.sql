@@ -64,4 +64,5 @@ CREATE TABLE `trans_log_unfinished` (
   `create_time` datetime NOT NULL,
   PRIMARY KEY (`trans_log_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 SELECT * FROM translog.trans_log_detail;

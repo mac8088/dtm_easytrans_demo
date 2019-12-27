@@ -2,27 +2,27 @@ spring:
   application:
     name: point-service  # the same with com.yiqiniu.easytrans.demos.order.Constant.APPID
   datasource: # order service datasource config
-    url: jdbc:mysql://localhost:3306/point?characterEncoding=UTF-8&useSSL=false
-    username: root
-    password: 123456
-    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:postgresql://localhost:5432/easytx_point
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
 
 server:
-  port: 8083
- 
+  port: 18083
+
 # RIBBON用，也可以直接开启Eureka
 order-service:
   ribbon:
-    listOfServers: localhost:8080
+    listOfServers: localhost:18080
 
 wallet-service:
   ribbon:
-    listOfServers: localhost:8081
+    listOfServers: localhost:18081
 
 easytrans:
   master:
     zk:
-      zooKeeperUrl: localhost:2281
+      zooKeeperUrl: localhost:2181
   stringcodec:
     zk:
       zooKeeperUrl: ${easytrans.master.zk.zooKeeperUrl}
@@ -37,9 +37,9 @@ easytrans:
       logCleanTime: 01:22:00
       druid:
         driverClassName: com.mysql.jdbc.Driver
-        url: jdbc:mysql://localhost:3306/wallet_translog?characterEncoding=UTF-8&useSSL=false
+        url: jdbc:mysql://localhost:3306/easytx_point_translog?characterEncoding=UTF-8&useSSL=false
         username: root
-        password: 123456
+        password: root
   queue:
     kafka:
       enabled: true

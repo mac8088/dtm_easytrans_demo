@@ -9,32 +9,34 @@ import com.yiqiniu.easytrans.demos.wallet.api.vo.WalletPayVO.WalletPayResponseVO
 import com.yiqiniu.easytrans.protocol.tcc.TccMethod;
 
 @Component
-public class WalletPayTccService implements TccMethod<WalletPayRequestVO, WalletPayResponseVO>{
+public class WalletPayTccService implements TccMethod<WalletPayRequestVO, WalletPayResponseVO> {
 
-	public static final String METHOD_NAME="pay";
-	
+	public static final String METHOD_NAME = "pay";
+
 	@Resource
 	private WalletService wlletService;
 
 	@Override
 	public WalletPayResponseVO doTry(WalletPayRequestVO param) {
+		System.out.println("enter doTry ...");
 		return wlletService.doTryPay(param);
 	}
 
 	@Override
 	public void doConfirm(WalletPayRequestVO param) {
+		System.out.println("enter doConfirm ...");
 		wlletService.doConfirmPay(param);
 	}
 
-
 	@Override
 	public void doCancel(WalletPayRequestVO param) {
+		System.out.println("enter doCancel ...");
 		wlletService.doCancelPay(param);
 	}
-	
 
 	@Override
 	public int getIdempotentType() {
+		System.out.println("enter getIdempotentType ...");
 		return IDENPOTENT_TYPE_FRAMEWORK;
 	}
 }

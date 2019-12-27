@@ -10,12 +10,10 @@ import com.yiqiniu.easytrans.protocol.msg.ReliableMessageHandler;
 import com.yiqiniu.easytrans.queue.consumer.EasyTransConsumeAction;
 
 @Component
-public class OrderFinishedMessageHandler implements ReliableMessageHandler<OrderFinishedMessage>{
+public class OrderFinishedMessageHandler implements ReliableMessageHandler<OrderFinishedMessage> {
 
-	
 	@Resource
 	private PointService pointService;
-
 
 	@Override
 	public int getIdempotentType() {
@@ -24,7 +22,9 @@ public class OrderFinishedMessageHandler implements ReliableMessageHandler<Order
 
 	@Override
 	public EasyTransConsumeAction consume(EasyTransRequest<?, ?> request) {
+		System.out.println("exec OrderFinishedMessageHandler.consume start...");
 		pointService.addPointForBuying((OrderFinishedMessage) request);
+		System.out.println("exec OrderFinishedMessageHandler.consume end  ...");
 		return EasyTransConsumeAction.CommitMessage;
 	}
 }

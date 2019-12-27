@@ -21,8 +21,10 @@ public class WalletService {
 	
 	@Transactional
 	public WalletPayResponseVO doTryPay(WalletPayRequestVO param) {
-		int update = jdbcTemplate.update("update `wallet` set freeze_amount = freeze_amount + ? where user_id = ? and (total_amount - freeze_amount) >= ?;", 
-				param.getPayAmount(),param.getUserId(),param.getPayAmount());
+		System.out.println("exec doTryPay start...");
+		int update = jdbcTemplate.update(
+				"update wallet set freeze_amount = freeze_amount + ? where user_id = ? and (total_amount - freeze_amount) >= ?;", 
+				param.getPayAmount(), param.getUserId(), param.getPayAmount());
 		
 		if(update != 1){
 			throw new RuntimeException("can not find specific user id or have not enought money");
@@ -30,26 +32,39 @@ public class WalletService {
 		
 		WalletPayResponseVO walletPayTccMethodResult = new WalletPayResponseVO();
 		walletPayTccMethodResult.setFreezeAmount(param.getPayAmount());
+		System.out.println("exec doTryPay end...");
 		return walletPayTccMethodResult;
 	}
 	
 	@Transactional
 	public void doConfirmPay(WalletPayRequestVO param) {
-		int update = jdbcTemplate.update("update `wallet` set freeze_amount = freeze_amount - ?, total_amount = total_amount - ? where user_id = ?;", 
-				param.getPayAmount(),param.getPayAmount(),param.getUserId());
+		System.out.println("exec doConfirmPay start...");
+		int update = jdbcTemplate.update(
+				"update wallet set freeze_amount = freeze_amount - ?, total_amount = total_amount - ? where user_id = ?;", 
+				param.getPayAmount(), param.getPayAmount(), param.getUserId());
 		
 		if(update != 1){
-			throw new RuntimeException("unknow Exception!");
+			throw new RuntimeException("thrown exception with the failed confirmPay, not match!");
 		}
+		
+		if(param.getPayAmount()==200 && (new java.util.Random().nextBoolean())) {
+			throw new RuntimeException("thrown exception with the failed confirmPay, over 200!");
+		}
+		
+		System.out.println("exec doConfirmPay end...");
 	}
 	
 	@Transactional
 	public void doCancelPay(WalletPayRequestVO param) {
-		int update = jdbcTemplate.update("update `wallet` set freeze_amount = freeze_amount - ? where user_id = ?;", 
+		System.out.println("exec doCancelPay start...");
+		int update = jdbcTemplate.update(
+				"update wallet set freeze_amount = freeze_amount - ? where user_id = ?;", 
 				param.getPayAmount(),param.getUserId());
+		
 		if(update != 1){
-			throw new RuntimeException("unknow Exception!");
+			throw new RuntimeException("thrown exception with the failed cancelPay!");
 		}
+		System.out.println("exec doCancelPay end...");
 	}
 	
 
