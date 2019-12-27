@@ -58,3 +58,12 @@ CREATE TABLE "order" (
 );
 
 INSERT INTO wallet (user_id, total_amount, freeze_amount) VALUES ('1', '10000000', '0');
+
+
+CREATE TABLE "point" (
+    "user_id" numeric(11)          NOT NULL,
+    "point" numeric(20)            NOT NULL,
+    constraint pk_point primary key ("user_id")
+);
+
+INSERT INTO point (user_id, point) VALUES ('1', '0');
