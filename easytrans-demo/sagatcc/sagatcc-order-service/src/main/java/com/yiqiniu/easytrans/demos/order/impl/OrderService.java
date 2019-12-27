@@ -83,6 +83,11 @@ public class OrderService {
 		 * 框架会维护全局事务的最终一致性
 		 */
 		
+		//TODO hard coding verify GT1
+		if(id % 3 == 0 && id % 5 != 0){
+			throw new RuntimeException("unknown exception with wrong order (Mod3 and !Mod5)!");
+		}
+		
 		/**
 		 * finally,use a SAGA-TCC request to asyn update the status of order，
 		 * framework will execute confirm or cancel based on the final transaction status
@@ -102,9 +107,9 @@ public class OrderService {
 		transaction.execute(updateOrderStatus);
 		System.out.println("exec UpdateOrderStatus end...");
 		
-		//hard coding with: if order Id MOD 3 == 0
-		if(id % 3 == 0){
-			throw new RuntimeException("wrong order and unknown Exception!");
+		//TODO hard coding verify GT2
+		if(id % 3 != 0 && id % 5 == 0){
+			throw new RuntimeException("unknown exception with wrong order (!Mod3 and Mod5)!");
 		}
 
 		System.out.println("exec buySomething end...");
