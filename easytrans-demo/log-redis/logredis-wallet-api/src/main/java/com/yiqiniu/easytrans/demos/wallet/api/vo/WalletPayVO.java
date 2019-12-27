@@ -8,14 +8,13 @@ import com.yiqiniu.easytrans.protocol.tcc.TccMethodRequest;
 
 public class WalletPayVO {
 
-	
-	@BusinessIdentifer(appId=WalletServiceApiConstant.APPID,busCode="pay",rpcTimeOut=2000)
+	@BusinessIdentifer(appId = WalletServiceApiConstant.APPID, busCode = "pay", rpcTimeOut = 2000)
 	public static class WalletPayRequestVO implements TccMethodRequest<WalletPayResponseVO> {
 
 		private static final long serialVersionUID = 1L;
 
 		private Integer userId;
-		
+
 		private Long payAmount;
 
 		public Integer getUserId() {
@@ -34,20 +33,21 @@ public class WalletPayVO {
 			this.payAmount = payAmount;
 		}
 	}
-	
-	public static class WalletPayResponseVO implements Serializable{
-		
+
+	public static class WalletPayResponseVO implements Serializable {
+
 		private static final long serialVersionUID = 1L;
-		
+
 		private Long freezeAmount;
-		
+
 		public Long getFreezeAmount() {
 			return freezeAmount;
 		}
+
 		public void setFreezeAmount(Long freezeAmount) {
 			this.freezeAmount = freezeAmount;
 		}
-		
+
 		@Override
 		public String toString() {
 			return "WalletPayTccMethodResult [freezeAmount=" + freezeAmount + "]";

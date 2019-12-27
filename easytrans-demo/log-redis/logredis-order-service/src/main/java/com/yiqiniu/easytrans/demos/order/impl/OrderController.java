@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class OrderController {
-	
+
 	@Autowired
 	private OrderService orderService;
-	
+
 	@RequestMapping("/buySth")
 	@ResponseBody
-	public Integer buySomething(@RequestParam int userId,@RequestParam int money){
+	public Integer buySomething(@RequestParam int userId, @RequestParam int money) {
 		return orderService.buySomething(userId, money);
 	}
 }

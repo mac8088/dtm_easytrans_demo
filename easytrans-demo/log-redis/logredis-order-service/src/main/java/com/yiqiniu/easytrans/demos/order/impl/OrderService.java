@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import javax.annotation.Resource;
@@ -86,9 +87,20 @@ public class OrderService {
 		 * we can get remote service result to determine whether to commit this transaction
 		 * 
 		 * 可以获取远程返回的结果用以判断是继续往下走 还是 抛异常结束
-		 * 
-		 * deductFuture.get(); 
+		 *  
 		 */
+		try {
+			System.out.println("the RPC return result: " + deductFuture.get());
+		} catch (InterruptedException e) {
+			System.err.println("get InterruptedException when get RPC reuslt!");
+		} catch (ExecutionException e) {
+			System.err.println("get ExecutionException when get RPC reuslt!");
+		}
+		
+		//hard coding with: if order Id MOD 3 == 0
+		if(id % 3 == 0){
+			throw new RuntimeException("wrong order and unknown Exception!");
+		}
 
 		return id;
 	}
@@ -96,14 +108,14 @@ public class OrderService {
 	
 	private Integer saveOrderRecord(JdbcTemplate jdbcTemplate, final int userId, final long money) {
 		
-		final String INSERT_SQL = "INSERT INTO `order` (`order_id`, `user_id`, `money`, `create_time`) VALUES (NULL, ?, ?, ?);";
+		final String INSERT_SQL = "INSERT INTO public.order (order_id, user_id, money, create_time) VALUES ( nextval('order_seq'), ?, ?, ?);";
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(
 		    new PreparedStatementCreator() {
 		    	@Override
 		        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 		            PreparedStatement ps =
-		                connection.prepareStatement(INSERT_SQL, new String[] {"id"});
+		                connection.prepareStatement(INSERT_SQL, new String[] {"order_id"});
 		            ps.setInt(1, userId);
 		            ps.setLong(2, money);
 		            ps.setDate(3, new Date(System.currentTimeMillis()));
